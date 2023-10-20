@@ -5,10 +5,11 @@ import connectDB from './db/connectdb.js'
 import User from './model/User.js'
 import Product from './model/Product.js'
 import cors from 'cors'
+import jsonwebtoken from 'jsonwebtoken'
 const app = express()
 const port = process.env.PORT || '5000'
 const DATABASE_URL = process.env.DATABASE_URL
-
+const secretKey = '22121212';
 connectDB(DATABASE_URL)
 
 import multer from 'multer'
@@ -37,6 +38,10 @@ app.post("/login", async (req, res)=>{
         }else{
             res.send({result:"No User Found!"})
         }
+    const accessToken = jwt.sign({ sub: user.id }, secretKey, { expiresIn: '30m' });
+    const refreshToken = jwt.sign({ sub: user.id }, secretKey, { expiresIn: '7d' });
+
+  res.json({ accessToken, refreshToken });
     }else{
         res.send({result:"No email and password found!"})
     }

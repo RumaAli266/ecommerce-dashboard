@@ -24,10 +24,13 @@ const Login = () =>{
                 'Content-Type': 'application/json'
             }
         });
+        const { accessToken, refreshToken } = result.data;
         result = await result.json();
         console.warn(result)
         if(result.name){
             localStorage.setItem("user", JSON.stringify(result))
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
             navigate('/')
         }else{
             alert("please enter correct details")
